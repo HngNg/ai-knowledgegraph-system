@@ -7,3 +7,4 @@ langchain-core
 langchain-community
 neo4j
 astor
+langchain_google_genai

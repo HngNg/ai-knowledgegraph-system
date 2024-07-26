@@ -12,8 +12,8 @@ from py2neo import Graph, Node, Relationship
 app = Flask(__name__)
 
 # --- AWS Configuration ---
-AWS_ACCESS_KEY_ID = '___' 
-AWS_SECRET_ACCESS_KEY = '___'
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 S3_BUCKET_NAME = 'aiknowledgegraph' 
 
 neo4j_url = 'neo4j://neo4j:7687'
@@ -22,7 +22,7 @@ neo4j_password = '12345678'
 graph2 = Graph(neo4j_url, auth=(neo4j_username, neo4j_password))
 
 # llm = Ollama(model="llama3", base_url="http://localhost:11434") 
-os.environ["GOOGLE_API_KEY"] ='___'
+os.environ["GOOGLE_API_KEY"] =os.getenv('GOOGLE_API_KEY')
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 
 # --- Prompt Templates (You can adjust these as needed) ---

@@ -10,10 +10,6 @@ import pandas as pd
 from py2neo import Graph, Node, Relationship
 from flask_cors import CORS
 
-# from ..shared.config import neo4j_url, neo4j_username, neo4j_password
-# from ..shared.utils import dfIntoDB  # Assuming this function exists in utils.py
-# from ollama import Llama
-
 neo4j_url = 'neo4j://neo4j:7687'
 neo4j_username = 'neo4j'
 neo4j_password = '12345678'
@@ -23,7 +19,7 @@ CORS(app)
 graph = Graph(neo4j_url, auth=(neo4j_username, neo4j_password))
 # llm1 = OpenAI(openai_api_key=openai_api_key, temperature=0.0) 
 # llm = Ollama(model="llama3", base_url="http://text_processing_service:11434") 
-os.environ["GOOGLE_API_KEY"] ='___'
+os.environ["GOOGLE_API_KEY"] = os.getenv('GOOGLE_API_KEY')
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 
 pr = """# Knowledge Graph Instructions for Llama2

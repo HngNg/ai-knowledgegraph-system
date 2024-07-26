@@ -3,11 +3,12 @@ from PIL import Image
 import google.generativeai as genai
 from transformers import CLIPProcessor, CLIPModel
 import requests
+import os
 # from ..shared.config import google_api_key
 
 app = Flask(__name__)
 
-google_api_key ='___'
+google_api_key = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=google_api_key)
 
 input= """

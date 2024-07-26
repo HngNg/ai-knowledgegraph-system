@@ -18,7 +18,7 @@ neo4j_password = '12345678'
 graph2 = Graph(neo4j_url, auth=(neo4j_username, neo4j_password))
 # llm = OpenAI(openai_api_key=openai_api_key, temperature=0.0) 
 # llm = Ollama(model="llama3", base_url="http://query_processing_service:11434") 
-os.environ["GOOGLE_API_KEY"] ='___'
+os.environ["GOOGLE_API_KEY"] = os.getenv('GOOGLE_API_KEY')
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 
 refined_user_query_neo4j = """Your task is to refine the user query for spelling mistakes and syntax errors according to the Table Description part below. Do not add any information on your own in the refined query, just check for spellings and correct them according to the words in Table Description given below.
