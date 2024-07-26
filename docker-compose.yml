@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+
+  text_processing_service:
+    build: ./text_processing_service
+    ports:
+      - "5001:5001"
+    networks:
+      - my-knowledge-graph-network
+
+  image_processing_service:
+    build: ./image_processing_service
+    ports:
+      - "5002:5002"
+    networks:
+      - my-knowledge-graph-network
+
+  audio_processing_service:
+    build: ./audio_processing_service
+    ports:
+      - "5003:5003"
+    networks:
+      - my-knowledge-graph-network
+
+  query_processing_service:
+    build: ./query_processing_service
+    ports:
+      - "5004:5004"
+    networks:
+      - my-knowledge-graph-network
+
+  query_data_processing_service:
+    build: ./query_data_processing_service
+    ports:
+      - "5005:5005"
+    networks:
+      - my-knowledge-graph-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8501:8501"
+    networks:
+      - my-knowledge-graph-network
+    depends_on:
+      - text_processing_service
+      - image_processing_service
+      - audio_processing_service
+      - query_processing_service
+      - query_data_processing_service
+  neo4j:
+    image: neo4j:5.20.0
+    environment:
+      - NEO4J_AUTH=neo4j/12345678
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    networks:
+      - my-knowledge-graph-network
+
+networks:
+  my-knowledge-graph-network:  
+     driver: bridge

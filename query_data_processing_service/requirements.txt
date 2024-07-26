@@ -1,0 +1,9 @@
+Flask
+requests
+boto3
+pandas
+py2neo
+langchain-core
+langchain-community
+neo4j
+astor

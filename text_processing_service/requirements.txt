@@ -1,0 +1,10 @@
+Flask
+requests
+pandas
+py2neo
+langchain-core
+langchain-community
+neo4j
+astor
+flask_cors
+langchain-google-genai
