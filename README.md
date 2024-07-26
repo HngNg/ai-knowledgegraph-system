@@ -77,20 +77,30 @@ The application is built using the following technologies:
    git clone https://github.com/your-username/knowledge-graph-app.git
    cd knowledge-graph-app
 
-2. **Ensure Docker and Docker Compose are installed:**
+2. **Install Neo4j Database:**
+
+- Download and Install Neo4j Desktop:
+  - Visit the [Neo4j Download Page](https://neo4j.com/download/) and download the Neo4j Desktop.
+  - Follow the installation instructions for your operating system.
+- Set Up Neo4j Database:
+  - Open Neo4j Desktop and create a new database.
+  - Configure the database credentials (username and password) to match the settings in your `docker-compose.yml` file (`neo4j/12345678`).
+  - Start the Neo4j database and ensure it is running.
+
+4. **Ensure Docker and Docker Compose are installed:**
 
   - Docker Installation: https://docs.docker.com/engine/install/
     
   - Docker Compose Installation: https://docs.docker.com/compose/install/
 
-3. **Build and run the services:**
+5. **Build and run the services:**
   ```
   docker-compose build
   docker-compose up 
   ```
 This will build the Docker images for each service and start the containers.
 
-4. **Access the frontend:**
+6. **Access the frontend:**
 Open your web browser and navigate to http://localhost:8501.
 
 ### Usage
