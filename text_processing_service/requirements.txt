@@ -8,3 +8,4 @@ neo4j
 astor
 flask_cors
 langchain-google-genai
+python-dotenv

@@ -4,41 +4,63 @@ services:
 
   text_processing_service:
     build: ./text_processing_service
+    volumes:
+      - ./text_processing_service:/app
     ports:
       - "5001:5001"
     networks:
       - my-knowledge-graph-network
+    env_file:
+      - .env
 
   image_processing_service:
     build: ./image_processing_service
+    volumes:
+      - ./image_processing_service:/app
     ports:
       - "5002:5002"
     networks:
       - my-knowledge-graph-network
+    env_file:
+      - .env
 
   audio_processing_service:
     build: ./audio_processing_service
+    volumes:
+      - ./audio_processing_service:/app
     ports:
       - "5003:5003"
     networks:
       - my-knowledge-graph-network
+    env_file:
+      - .env
 
   query_processing_service:
     build: ./query_processing_service
+    volumes:
+      - ./query_processing_service:/app
     ports:
       - "5004:5004"
     networks:
       - my-knowledge-graph-network
+    env_file:
+      - .env
 
   query_data_processing_service:
     build: ./query_data_processing_service
+    volumes:
+      - ./query_data_processing_service:/app
     ports:
       - "5005:5005"
     networks:
       - my-knowledge-graph-network
+    env_file:
+      - .env
 
   frontend:
     build: ./frontend
+    volumes:
+      - ./frontend:/app
     ports:
       - "8501:8501"
     networks:
@@ -49,16 +71,25 @@ services:
       - audio_processing_service
       - query_processing_service
       - query_data_processing_service
+    env_file:
+      - .env
+      
   neo4j:
     image: neo4j:5.20.0
     environment:
       - NEO4J_AUTH=neo4j/12345678
+      - NEO4JLABS_PLUGINS=["apoc"]
+      - APOC_IMPORT_FILE_ENABLED=true
+      - APOC_IMPORT_FILE_USE_NEO4J_CONFIG=false
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
     ports:
       - "7474:7474"
       - "7687:7687"
+    volumes:
+      # - ./data:/data
+      - ./plugins:/plugins
     networks:
       - my-knowledge-graph-network
-
 networks:
   my-knowledge-graph-network:  
      driver: bridge

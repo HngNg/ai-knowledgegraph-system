@@ -4,10 +4,11 @@ import google.generativeai as genai
 from transformers import CLIPProcessor, CLIPModel
 import requests
 import os
+from dotenv import load_dotenv
 # from ..shared.config import google_api_key
 
 app = Flask(__name__)
-
+load_dotenv()
 google_api_key = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=google_api_key)
 
@@ -82,4 +83,5 @@ def process_image():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='image_processing_service', port=5002) 
+    # app.run(debug=True, host='image_processing_service', port=5002) 
+    app.run(debug=True, host='0.0.0.0', port=5002)

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from langchain_community.llms import Ollama 
 from langchain_google_genai import ChatGoogleGenerativeAI
 import os
+from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_community.graphs import Neo4jGraph
 import ast
@@ -19,6 +20,7 @@ CORS(app)
 graph = Graph(neo4j_url, auth=(neo4j_username, neo4j_password))
 # llm1 = OpenAI(openai_api_key=openai_api_key, temperature=0.0) 
 # llm = Ollama(model="llama3", base_url="http://text_processing_service:11434") 
+load_dotenv()
 os.environ["GOOGLE_API_KEY"] = os.getenv('GOOGLE_API_KEY')
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 
@@ -30,6 +32,7 @@ You are a top-tier algorithm designed for extracting information in structured f
 ## 2. Labeling Nodes
 - **Consistency**: Ensure you use basic or elementary types for node labels.
   - For example, when you identify an entity representing a person, always label it as **"person"**. Avoid using more specific terms like "mathematician" or "scientist".
+- **Multi-word Phrases**: Treat specific terminologies or terms (e.g., "Semantic communication", "Artificial Intelligence") as single entities. Preserve the spaces between words to maintain the integrity of the term. Do not merge them into a single word or use underscores.
 - **Node IDs**: Never utilize integers as node IDs. Node IDs should be names or human-readable identifiers found in the text.
 ## 3. Handling Numerical Data and Dates
 - Numerical data, like age or other related information, should be incorporated as attributes or properties of the respective nodes.
@@ -79,6 +82,7 @@ def KG_from_Text(user_query, table_name):
     df_list = ast.literal_eval(a1)
     split_data = [item.split('~~', 2) for item in df_list]
     df = pd.DataFrame(split_data, columns=['Source_Node', 'Relationship', 'Target_Node'])
+    print(df)
 
     for index, row in df.iterrows():
         source_node = Node("Node", name=row['Source_Node'], table_name=table_name)
@@ -114,7 +118,9 @@ def process_text():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='text_processing_service', port=5001) 
+    # app.run(debug=True, host='text_processing_service', port=5001) 
+    # app.run(debug=True, host='localhost', port=5001) 
+    app.run(debug=True, host='0.0.0.0', port=5001) 
 
 # result = KG_from_Text("What is e", "JSCC")
 # print (result)

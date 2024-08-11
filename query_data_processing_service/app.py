@@ -5,6 +5,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_community.graphs import Neo4jGraph
 from langchain_google_genai import ChatGoogleGenerativeAI
 import os
+from dotenv import load_dotenv
 import ast
 import pandas as pd
 from py2neo import Graph, Node, Relationship
@@ -21,8 +22,9 @@ neo4j_username = 'neo4j'
 neo4j_password = '12345678'
 graph2 = Graph(neo4j_url, auth=(neo4j_username, neo4j_password))
 
+load_dotenv()
 # llm = Ollama(model="llama3", base_url="http://localhost:11434") 
-os.environ["GOOGLE_API_KEY"] =os.getenv('GOOGLE_API_KEY')
+os.environ["GOOGLE_API_KEY"] = os.getenv('GOOGLE_API_KEY')
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 
 # --- Prompt Templates (You can adjust these as needed) ---
@@ -124,7 +126,9 @@ def retrieve():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=5005) 
+    app.run(debug=True, host='0.0.0.0', port=5005) 
+    # app.run(debug=True, host='query_data_processing', port=5005)
+
     
 
 # result = getFileNamesFromCloud("What is semantic communication?")

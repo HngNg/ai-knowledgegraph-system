@@ -61,6 +61,9 @@ def process_audio_with_service(audio, table_name):
     response = requests.post("http://audio_processing_service:5003/process_audio", 
                              files=files, 
                              data={"table_name": table_name})
+    # response = requests.post("http://localhost:5003/process_audio", 
+    #                          files=files, 
+    #                          data={"table_name": table_name})
 
     if response.status_code == 200:
         return response.json().get('message', "Audio processed successfully!")
@@ -70,6 +73,9 @@ def process_audio_with_service(audio, table_name):
 def query_knowledge_graph(query, table_name):
     response = requests.post("http://query_processing_service:5004/query", 
                             json={"query": query, "table_name": table_name})
+    
+    # response = requests.post("http://localhost:5004/query", 
+                            # json={"query": query, "table_name": table_name})
     if response.status_code == 200:
         return response.json().get('response', "No results found.")
     else:
@@ -164,7 +170,7 @@ with tabs[2]:
     table_name3 = st.text_input("Knowledge Graph ID:", key="table_name3")
     
     if 'chat_hist' not in st.session_state:
-        st.session_state.chat_hist = []
+        st.session_state.chat_hist2 = []
 
     # Display chat history
     for chat_entry in st.session_state.chat_hist:

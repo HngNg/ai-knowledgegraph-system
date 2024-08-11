@@ -8,16 +8,21 @@ import pandas as pd
 from py2neo import Graph, Node, Relationship
 from langchain_google_genai import ChatGoogleGenerativeAI
 import os
-
-app = Flask(__name__)
+from dotenv import load_dotenv
+from flask_cors import CORS
+import re
 
 neo4j_url = 'neo4j://neo4j:7687'
+# neo4j_url = 'neo4j://localhost:7687'
 neo4j_username = 'neo4j'
 neo4j_password = '12345678'
 
+app = Flask(__name__)
+# CORS(app)
 graph2 = Graph(neo4j_url, auth=(neo4j_username, neo4j_password))
 # llm = OpenAI(openai_api_key=openai_api_key, temperature=0.0) 
 # llm = Ollama(model="llama3", base_url="http://query_processing_service:11434") 
+load_dotenv()
 os.environ["GOOGLE_API_KEY"] = os.getenv('GOOGLE_API_KEY')
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
 
@@ -57,6 +62,9 @@ Example 3:
 Example 4:
     user_query: "How old is Alice?",
     cypher_generated: MATCH (a:Node {{name: 'Alice'}})-[r:age]->(age) RETURN age.name AS Age;
+Example 5:
+    user_query: "Tell me about Semantic Communication"
+    cypher_generated: MATCH (c:Node {{name: 'Semantic Communication'}})-[r]-(other:Node) RETURN c.name AS Source_Node, type(r) AS Relationship, other.name AS Target_Node;
 
 Generate the Cypher query for the user_query.
 The user_query is : {user_input}
@@ -72,6 +80,18 @@ and its output response:
 
 Use the user_query and its output response given above to generate output in simple English without missing any point.
 """
+
+def extract_cypher_query(output_text):
+    # Use regex to find the Cypher query starting with "MATCH" and ending with "Target_Node;"
+    query_pattern = r"MATCH.*?Target_Node;"
+    match = re.search(query_pattern, output_text, re.DOTALL)
+    
+    if match:
+        # Extract and clean the query
+        query = match.group(0).strip()
+        return query
+    else:
+        return None
 
 def shubhNeo4j(user_query):
     df_string = f"""
@@ -101,8 +121,9 @@ def shubhNeo4j(user_query):
     )   
     chain = prompt1 | llm 
     r1 = chain.invoke({"user_input": user_query, "df_string": df_string})
-    r2 = r1.content
-    print(r2)
+    print(r1)
+    r2 = extract_cypher_query(r1.content)
+    print("r2: \n" + r2)
     response0 = graph2.query(r2)
     print("*****")
     print(response0)
@@ -123,8 +144,10 @@ def shubhNeo4j(user_query):
 def query():
     data = request.get_json()
     user_query = data.get('query')
+    print(data)
     if user_query:
         try:
+            print("checkpoint1")
             result = shubhNeo4j(user_query)
             return jsonify({'status': 'success', 'response': result})
         except Exception as e:
@@ -134,8 +157,10 @@ def query():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='query_processing_service', port=5004) 
-    
+    print("hi")
+    app.run(debug=True, host='0.0.0.0', port=5004) 
+    # app.run(debug=True, host='localhost', port=5004) 
+
 # Test a little
 # result = shubhNeo4j("Give me Alice's Age?")
 

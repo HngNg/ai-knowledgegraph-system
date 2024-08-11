@@ -3,3 +3,4 @@ requests
 Pillow
 google-generativeai
 transformers
+python-dotenv
